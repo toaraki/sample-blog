@@ -147,3 +147,68 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# added at 2025/12/11
+# LOGGING設定
+# ファイルパスを絶対パスで指定します。
+LOG_FILE_PATH = "/var/log/django.log"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    
+    # 1. ハンドラーの定義 (どこに出力するか)
+    'handlers': {
+        'file': {
+            'level': 'INFO',  # INFOレベル以上のログを出力
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILE_PATH,
+            'maxBytes': 1024 * 1024 * 5,  # 5MB
+            'backupCount': 5,  # ローテーションで5世代まで保持
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    
+    # 2. フォーマッターの定義 (ログの形式)
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    
+    # 3. ロガーの定義 (どのログをどう扱うか)
+    'loggers': {
+        # Django本体のログ (SQLクエリなどは出力しない場合が多い)
+        'django': {
+            #'handlers': ['file', 'console'], # ファイルとコンソールの両方に出力
+            #'handlers': ['console'], # コンソールに出力
+            'handlers': ['file'], # ファイルに出力
+            'level': 'INFO',
+            'propagate': True,
+        },
+        # 自分で定義したアプリケーションのログ (例: 'blog' アプリケーション)
+        'blog': {
+            # 'handlers': ['file', 'console'],
+            # 'handlers': ['console'],
+            'handlers': ['file'],
+            'level': 'DEBUG', # アプリケーションのログは詳細に (DEBUG)
+            'propagate': False,
+        },
+        # プロジェクト全体を通して、全てのログをファイルに出力したい場合は、
+        # rootロガーの設定を変更します。
+        # '': {
+        #     'handlers': ['file', 'console'],
+        #     'level': 'INFO',
+        # }
+    }
+}
