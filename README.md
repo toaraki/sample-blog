@@ -16,7 +16,7 @@ Web+APP+DBの一般的なWeb3層アプリになっています。
 # デプロイ手順
 Git cloneします。
 ```
-git clone https://github.com/skitamura7446/sample-blog.git
+git clone https://github.com/toaraki/sample-blog.git
 cd sample-blog
 ```
 
